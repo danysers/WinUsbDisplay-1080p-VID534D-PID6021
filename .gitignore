@@ -1,0 +1,21 @@
+# Local backups created by the optimizer
+backup_*/
+Windows/optimized-1080p/backup_*/
+
+# Logs and local diagnostics
+*.log
+WinUsbDisplay.log
+pnp_connected.txt
+drivers.txt
+
+# Local archives/build artifacts
+*.zip
+*.7z
+*.rar
+
+# OS/editor noise
+Thumbs.db
+Desktop.ini
+.DS_Store
+.vscode/
+.idea/

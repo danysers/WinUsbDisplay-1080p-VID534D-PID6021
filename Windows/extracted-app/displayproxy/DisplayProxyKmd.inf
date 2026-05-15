@@ -1,0 +1,102 @@
+
+[Version]
+Signature = "$Windows NT$"
+Class=System
+ClassGUID={4d36e97d-e325-11ce-bfc1-08002be10318}
+Provider=%MNF%
+DriverVer = 09/19/2021,15.47.24.217
+CatalogFile=DisplayProxy.cat
+PnpLockdown=1
+
+[DestinationDirs]
+Displayproxykmd.CopyFiles      = 12                ; drivers
+Displayproxyumd.CopyFiles      = 11                ; system32
+Displayproxyumdwow.CopyFiles   = 10, SysWow64      ; x64-specific
+
+[SourceDisksFiles.x86]
+DisplayProxyKmd.sys=1,x86
+DisplayProxyUmd.dll=1,x86
+
+[SourceDisksFiles.amd64]
+DisplayProxyKmd.sys=1,x64
+DisplayProxyUmd.dll=1,x64
+DisplayProxyUmd32.dll=1,x64
+
+[SourceDisksNames.x86]
+1 = %DiskName%
+
+[SourceDisksNames.amd64]
+1 = %DiskName%
+
+
+[Manufacturer]
+%MNF%=MNF,NTx86,NTamd64
+
+[MNF.NTx86]
+;
+;	Allow the driver to be loaded on VGA and XGA
+;
+"Ultrasemi Display Device" = Display_Inst, Root\UltrasemiDisplayProxy
+
+[MNF.NTamd64]
+;
+;	Allow the driver to be loaded on VGA and XGA
+;
+"Ultrasemi Display Device" = Display_Inst, Root\UltrasemiDisplayProxy
+
+[Display_Inst.NT]
+CopyFiles = Displayproxykmd.CopyFiles, Displayproxyumd.CopyFiles
+
+[Display_Inst.NTamd64]
+CopyFiles = Displayproxykmd.CopyFiles, Displayproxyumd.CopyFiles, Displayproxyumdwow.CopyFiles
+
+[Displayproxykmd.CopyFiles]
+DisplayProxyKmd.sys
+
+[Displayproxyumd.CopyFiles]
+DisplayProxyUmd.dll
+
+[Displayproxyumdwow.CopyFiles]
+DisplayProxyUmd32.dll, DisplayProxyUmd.dll,, 0x00004000 ; COPYFLG_IN_USE_TRY_RENAME
+
+;
+;   Install driver service
+;
+[Display_Inst.NT.Services]
+AddService = DiaplayProxykmd,0x00000002,DiaplayProxy_Service_Inst
+
+[Display_Inst.NTamd64.Services]
+AddService = DiaplayProxykmd,0x00000002,DiaplayProxy_Service_Inst
+
+
+[DiaplayProxy_Service_Inst]
+ServiceType = %SERVICE_KERNEL_DRIVER%
+StartType = %SERVICE_BOOT_START%
+ErrorControl = %SERVICE_ERROR_IGNORE%
+ServiceBinary = %12%\Displayproxykmd.sys
+LoadOrderGroup = Extended Base
+
+
+[Strings]
+
+;  *******Localizable Strings*******
+MNF= "Ultrasemi Co.,Ltd."
+DiskName = "Data"
+
+;  *******Non Localizable Strings*******
+
+SERVICE_BOOT_START = 0x0
+SERVICE_SYSTEM_START = 0x1
+SERVICE_AUTO_START = 0x2
+SERVICE_DEMAND_START = 0x3
+SERVICE_DISABLED = 0x4
+
+SERVICE_KERNEL_DRIVER = 0x1
+SERVICE_ERROR_IGNORE = 0x0
+SERVICE_ERROR_NORMAL = 0x1
+SERVICE_ERROR_SEVERE = 0x2
+SERVICE_ERROR_CRITICAL = 0x3
+
+REG_MULTI_SZ   = 0x00010000
+REG_EXPAND_SZ = 0x00020000
+REG_DWORD = 0x00010001
