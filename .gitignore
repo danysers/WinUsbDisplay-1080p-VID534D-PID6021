@@ -10,6 +10,7 @@ drivers.txt
 
 # Local archives/build artifacts
 *.zip
+!releases/ubuntu-1.0.0/*.zip
 *.7z
 *.rar
 
@@ -19,3 +20,14 @@ Desktop.ini
 .DS_Store
 .vscode/
 .idea/
+
+# Linux development/release artifacts
+.upstream-ms912x/
+dist/
+__pycache__/
+Linux/driver/*.o
+Linux/driver/*.ko
+Linux/driver/*.mod*
+Linux/driver/.*.cmd
+Linux/driver/Module.symvers
+Linux/driver/modules.order

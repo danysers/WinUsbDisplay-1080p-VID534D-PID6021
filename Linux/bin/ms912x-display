@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: MIT
+set -euo pipefail
+if command -v gnome-control-center >/dev/null; then exec gnome-control-center display; fi
+if command -v kscreen-doctor >/dev/null && command -v systemsettings >/dev/null; then exec systemsettings kcm_kscreen; fi
+if command -v xfce4-display-settings >/dev/null; then exec xfce4-display-settings; fi
+if command -v mate-display-properties >/dev/null; then exec mate-display-properties; fi
+echo 'Abra la configuracion de pantallas de su escritorio y seleccione 1920x1080.'
+echo 'Para diagnosticar: ms912x-status'

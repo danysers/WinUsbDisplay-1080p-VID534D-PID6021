@@ -1,6 +1,14 @@
 # Notices
 
-This repository is a Windows-only optimized distribution and documentation effort for generic USB display adapters identified as `USB\VID_534D&PID_6021&MI_03`.
+This repository includes the original Windows distribution and a Linux extension
+for generic USB display adapters identified as `534d:6021`.
+
+## Linux extension
+
+`Linux/driver` contains GPL-2.0-only code derived from rhgndf/ms912x, including
+local compatibility changes. It is NOT covered by the repository's MIT license.
+Full GPL text: `Linux/driver/LICENSE`. Pinned commit, attribution and changes:
+`Linux/UPSTREAM.md`. Original Linux installation scripts and documentation use MIT.
 
 ## Original material
 

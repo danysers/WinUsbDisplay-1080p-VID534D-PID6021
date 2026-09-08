@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: MIT
+set -uo pipefail
+export LC_ALL=C
+echo '=== LinuxUsbDisplay: diagnostico ==='
+printf 'Kernel: %s | Arquitectura: %s | Sesion: %s\n' "$(uname -r)" "$(uname -m)" "${XDG_SESSION_TYPE:-desconocida}"
+if command -v dkms >/dev/null; then dkms status -m ms912x; else echo 'DKMS no instalado.'; fi
+if command -v modinfo >/dev/null; then
+    modinfo ms912x 2>/dev/null | grep -E '^(filename|version|vermagic|signer|sig_key):' || echo 'Modulo no instalado para este kernel.'
+fi
+[[ -d /sys/module/ms912x ]] && echo 'Modulo: cargado.' || echo 'Modulo: NO cargado.'
+if command -v mokutil >/dev/null; then mokutil --sb-state 2>/dev/null || echo 'Estado Secure Boot no disponible (BIOS/contenedor).'; fi
+echo '=== Adaptador USB 534d:6021 ==='
+found=0
+shopt -s nullglob
+for dev in /sys/bus/usb/devices/*; do
+    [[ -f $dev/idVendor && -f $dev/idProduct ]] || continue
+    [[ $(<"$dev/idVendor") == 534d && $(<"$dev/idProduct") == 6021 ]] || continue
+    found=1
+    printf 'Puerto: %s\n' "$(basename "$dev")"
+    [[ -r $dev/speed ]] && printf 'Velocidad negociada: %s Mbit/s\n' "$(<"$dev/speed")"
+    [[ -r $dev/power/control ]] && printf 'Energia USB: %s\n' "$(<"$dev/power/control")"
+    for intf in "$dev"/*:*; do
+        [[ -L $intf/driver ]] && printf 'Interfaz %s: %s\n' "$(basename "$intf")" "$(basename "$(readlink -f "$intf/driver")")"
+    done
+done
+((found)) || echo 'No se encontro el adaptador. Revise el cable y el puerto USB.'
+echo '=== Conectores del controlador ==='
+for card in /sys/class/drm/card[0-9]*; do
+    [[ $(basename "$card") =~ ^card[0-9]+$ ]] || continue
+    [[ -L $card/device/driver ]] || continue
+    [[ $(basename "$(readlink -f "$card/device/driver")") == ms912x ]] || continue
+    for conn in "$card"/card*-*; do
+        [[ -r $conn/status ]] || continue
+        printf '%s: %s\n' "$(basename "$conn")" "$(<"$conn/status")"
+        [[ -r $conn/modes ]] && cat "$conn/modes"
+    done
+done
+echo '=== Mensajes recientes del controlador ==='
+if ((EUID == 0)); then
+    dmesg --color=never 2>/dev/null | grep -iE 'ms912x|module verification|key was rejected' | tail -n 60 || true
+else
+    echo 'Para incluir mensajes del kernel: sudo ms912x-status'
+fi
+echo 'Configuracion: ms912x-display | Log de instalacion: /var/log/ms912x-install.log'

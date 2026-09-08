@@ -1,4 +1,47 @@
-# WinUsbDisplay 1080p Optimized for VID_534D PID_6021
+# USBDisplay 1080p — Windows y Ubuntu/Linux
+
+## Nueva versión para Ubuntu
+
+La carpeta [Linux](Linux/README.md) contiene el controlador DRM/KMS de código
+abierto `ms912x`, adaptado para Ubuntu, con instalación DKMS, diagnóstico y
+desinstalación.
+
+### Instalar en Ubuntu con una sola línea
+
+Abra una terminal en Ubuntu y ejecute:
+
+```bash
+wget -qO- https://raw.githubusercontent.com/danysers/WinUsbDisplay-1080p-VID534D-PID6021/main/install-ubuntu.sh | bash
+```
+
+El instalador descarga la versión 1.0.0, comprueba su SHA-256 e instala las
+dependencias y el módulo DKMS. Solicitará la contraseña de `sudo`. Si Secure Boot
+requiere registrar una clave, siga los pasos de la [guía](Linux/README.md#secure-boot).
+
+Si usa `curl`, el comando equivalente es:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/danysers/WinUsbDisplay-1080p-VID534D-PID6021/main/install-ubuntu.sh | bash
+```
+
+Descarga manual: [ZIP](releases/ubuntu-1.0.0/LinuxUsbDisplay-Ubuntu-1.0.0.zip)
+o [tar.gz](releases/ubuntu-1.0.0/LinuxUsbDisplay-Ubuntu-1.0.0.tar.gz).
+
+Si ya clonó este repositorio:
+
+```bash
+bash Linux/install.sh
+```
+
+También se puede generar el paquete independiente con `python tools/package.py`.
+Consulte [pruebas y limitaciones](Linux/VALIDATION.md): compilación y pruebas de
+instalación verificadas; falta validar la imagen con el adaptador físico en Linux.
+El código Linux usa GPL-2.0-only; los scripts propios siguen bajo MIT.
+
+## Distribución Windows original
+
+La documentación que sigue corresponde al paquete Windows original, conservado
+en `Windows/`. Sus mediciones y limitaciones no son pruebas de la versión Linux.
 
 > Distribución Windows-only optimizada y documentada para adaptadores USB genéricos a HDMI basados en `USB\VID_534D&PID_6021&MI_03`.
 >

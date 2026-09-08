@@ -1,0 +1,27 @@
+# SPDX-License-Identifier: GPL-2.0-only
+ms912x-y := ms912x_registers.o ms912x_connector.o ms912x_transfer.o ms912x_drv.o
+obj-m := ms912x.o
+
+# Probe the target headers, including Ubuntu backports, not the running kernel.
+drm_headers := $(srctree)/include/drm
+ifneq ($(shell grep -l 'drm_dev_set_dma_dev' $(drm_headers)/drm_device.h),)
+ccflags-y += -DMS912X_HAS_DMA_DEV
+endif
+ifneq ($(wildcard $(drm_headers)/clients/drm_client_setup.h),)
+ccflags-y += -DMS912X_HAS_CLIENT_SETUP
+endif
+ifneq ($(wildcard $(drm_headers)/drm_fbdev_shmem.h),)
+ccflags-y += -DMS912X_HAS_FBDEV_SHMEM
+endif
+ifneq ($(shell grep -l 'drm_crtc_helper_atomic_check' $(drm_headers)/drm_crtc_helper.h),)
+ccflags-y += -DMS912X_HAS_CRTC_CHECK
+endif
+ifneq ($(shell grep -l 'struct drm_atomic_commit {' $(drm_headers)/drm_atomic.h),)
+ccflags-y += -DMS912X_HAS_ATOMIC_COMMIT
+endif
+ifneq ($(shell grep -l 'timer_delete_sync' $(srctree)/include/linux/timer.h),)
+ccflags-y += -DMS912X_HAS_TIMER_DELETE
+endif
+ifneq ($(shell grep -l 'shutdown.*usb_interface' $(srctree)/include/linux/usb.h),)
+ccflags-y += -DMS912X_HAS_USB_SHUTDOWN
+endif

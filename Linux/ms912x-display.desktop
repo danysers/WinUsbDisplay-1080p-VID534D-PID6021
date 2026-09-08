@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Pantalla USB MS912x
+Comment=Configurar la pantalla USB en el escritorio
+Exec=/usr/local/bin/ms912x-display
+Icon=video-display
+Terminal=false
+Categories=Settings;HardwareSettings;
